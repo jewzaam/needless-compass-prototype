@@ -40,7 +40,9 @@
                 var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
 
                 // start the map in South-East England
-                map.setView(new L.LatLng(51.3, 0.7), 9);
+                //map.setView(new L.LatLng(51.3, 0.7), 9);
+                map.setView(new L.LatLng(35.674258000000002, -78.638768999999996), 9);
+
                 map.addLayer(osm);
             }
         </script>

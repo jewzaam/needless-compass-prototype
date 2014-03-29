@@ -17,52 +17,459 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Needless Compass Prototype</title>
+        <title>Needless Compass Prototype: leaflet</title>
         <!-- icon source: http://4vector.com/free-vector/compass-rose-98397 -->
         <link rel="shortcut icon" href="images/compass_rose.ico"/>
         <link rel="stylesheet" href="css/styles.css"/>
+        <link rel="stylesheet" href="style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+
     </head>
     <body>
-        Needless Compass Prototype: House<br>
-        <form name="theForm">
-            <fieldset>
-                <table>
-                    <tr>
-                        <td>
-                            <label for="name" id="name_label"><strong>Name</strong></label>
-                        </td>
-                        <td>
-                            <input name="name" id="name" type="text" size="100" required placeholder="The name"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="streetAddress" id="streetAddress_label">Street Address</label>
-                        </td>
-                        <td>
-                            <input name="streetAddress" id="streetAddress" type="text" size="100" required placeholder="The address"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="location" id="location_label">Location</label>
-                        </td>
-                        <td>
-                            <a href="get_current_location"><img src="images/compass_rose.ico" width="32" height="32" align="middle"/></a>
-                            <input name="location" id="location" type="text" size="95" required placeholder="The latitude and longitude"/>
-                        </td>
-                    </tr>
-                </table>
-                <input type="submit" id="addHouse" value="Add!"/>
-                <span id="result"></span>
-            </fieldset>
-        </form>
+        Needless Compass [Prototype]<br/>
+        Lower score is better, list should be sorted from lowest to highest score.<br/>
+        You can also <a href="house.html">add a house</a> or <a href="site.html">add a site</a>.
+        <hr/>
+        <div id="map" class="map" style="height: 500px"></div>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <th>Score: Route</th>
+                    <th>Address</th>
+                </tr>
+                <tr>
+                    <td>realtor.com 1/31/2014</td>
+                    <td align="right">100 %</td>
+                    <td>1300 Cricklewood Court, Raleigh, NC 27603, USA</td>
+                </tr>
+                <tr>
+                    <td><strong>North of Lake Benson</strong></td>
+                    <td align="right">95 %</td>
+                    <td>2015 Gottwald Court, Garner, NC 27529, USA</td>
+                </tr>
+                <tr>
+                    <td>realtor.com 1/31/2014</td>
+                    <td align="right">92 %</td>
+                    <td>700 Brittley Way, Apex, NC 27502, USA</td>
+                </tr>
+                <tr>
+                    <td>realtor.com 2014/02/28</td>
+                    <td align="right">85 %</td>
+                    <td>10832 Bexhill Drive, Cary, NC 27518, USA</td>
+                </tr>
+                <tr>
+                    <td>realtor.com 2014/02/28</td>
+                    <td align="right">83 %</td>
+                    <td>214 Shillings Chase Drive, Cary, NC 27518, USA</td>
+                </tr>
+                <tr>
+                    <td>realtor.com 1/31/2014</td>
+                    <td align="right">75 %</td>
+                    <td>116 Honorable Place, Garner, NC 27529, USA</td>
+                </tr>
+                <tr>
+                    <td>realtor.com 1/31/2014</td>
+                    <td align="right">74 %</td>
+                    <td>491 Waterville Street, Raleigh, NC 27603, USA</td>
+                </tr>
+                <tr>
+                    <td>realtor.com 1/31/2014</td>
+                    <td align="right">72 %</td>
+                    <td>317 Tallowwood Drive, Garner, NC 27529, USA</td>
+                </tr>
+                <tr>
+                    <td>realtor.com 1/31/2014</td>
+                    <td align="right">65 %</td>
+                    <td>121 Acentala Court, Raleigh, NC 27603, USA</td>
+                </tr>
+                <tr>
+                    <td>Holland Farms Cary</td>
+                    <td align="right">51 %</td>
+                    <td>Holland Bend Drive, Cary, NC 27519, USA</td>
+                </tr>
+                <tr>
+                    <td>Lot near Lake Benson</td>
+                    <td align="right">48 %</td>
+                    <td>8004 Lake Shore Drive, Garner, NC 27529, USA</td>
+                </tr>
+                <tr>
+                    <td>realtor.com 2/8/2014</td>
+                    <td align="right">48 %</td>
+                    <td>4704 Swordfish Drive, Raleigh, NC 27603, USA</td>
+                </tr>
+                <tr>
+                    <td>Maggie Run</td>
+                    <td align="right">16 %</td>
+                    <td>Maggie Run Lane, Fuquay Varina, NC, USA</td>
+                </tr>
+                <tr>
+                    <td>Current Home</td>
+                    <td align="right">0 %</td>
+                    <td>80 Sophia Lane, Willow Spring, NC 27592, USA</td>
+                </tr>
+            </tbody>
+        </table>
+        <script type="text/javascript">
+            // set up the map
+            var map = new L.Map('map');
+            // create the tile layer with correct attribution
+            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+            var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
+            map.addLayer(osm);
+
+            // breaking out point and line features separately to reduce variables while figuring this stuff out
+            var poiFeatures = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "Red Hat Tower",
+                            "categories": ["work"],
+                            "address": "100 East Davie Street, Raleigh, NC 27601, USA"
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                -78.63799139999999,
+                                35.775469899999997
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "North of Lake Benson",
+                            "categories": ["house"],
+                            "score": "95 %",
+                            "address": "2015 Gottwald Court, Garner, NC 27529, USA",
+                            "view": 11
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                -78.638768999999996,
+                                35.674258000000002
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "Johnson Pond",
+                            "categories": ["daycare"],
+                            "address": "6523 Johnson Pond Road, Fuquay Varina, NC 27526, USA"
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                -78.756513999999996,
+                                35.606282
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "Wake Tech",
+                            "categories": ["college"],
+                            "address": "9101 Fayetteville Road, Raleigh, NC 27603, USA"
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                -78.70477799999999,
+                                35.651594899999999
+                            ]
+                        }
+                    }
+                ]
+            };
+
+
+            var houseIcon = L.icon({
+                iconUrl: 'images/color_icons_green_home.png',
+                iconSize: [26, 45],
+                iconAnchor: [13, 45],
+                popupAnchor: [0, -30]
+            });
+
+            L.geoJson(poiFeatures, {
+                pointToLayer: function(feature, latlng) {
+                    if (feature.properties && feature.properties.view) {
+                        map.setView(latlng, feature.properties.view);
+                    }
+                    if (feature.properties && feature.properties.categories && feature.properties.categories.indexOf("house") >= 0) {
+                        // return with house icon if has house category
+                        return L.marker(latlng, {icon: houseIcon});
+                    } else {
+                        return L.marker(latlng);
+                    }
+                },
+                onEachFeature: function onEachFeature(feature, layer) {
+                    // does this feature have a property named address?
+                    var popupContent = "";
+                    if (feature.properties && feature.properties.name) {
+                        popupContent += ("<strong>" + feature.properties.name + "</strong><br>");
+                    }
+                    if (feature.properties && feature.properties.score) {
+                        popupContent += ("Score: " + feature.properties.score + "<br>");
+                    }
+                    if (feature.properties && feature.properties.address) {
+                        popupContent += feature.properties.address;
+                    }
+                    layer.bindPopup(popupContent);
+                }
+            }).addTo(map);
+
+
+            var routeFeatures = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "Work Normal",
+                            "frequency": 5
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    -78.638914,
+                                    35.674653999999997
+                                ],
+                                [
+                                    -78.637555000000006,
+                                    35.67465
+                                ],
+                                [
+                                    -78.637313000000006,
+                                    35.675313000000003
+                                ],
+                                [
+                                    -78.645538000000002,
+                                    35.688243999999997
+                                ],
+                                [
+                                    -78.635733999999999,
+                                    35.693086999999998
+                                ],
+                                [
+                                    -78.639379000000005,
+                                    35.725127000000001
+                                ],
+                                [
+                                    -78.635700999999997,
+                                    35.763424999999998
+                                ],
+                                [
+                                    -78.635401000000002,
+                                    35.769384000000002
+                                ],
+                                [
+                                    -78.638733000000002,
+                                    35.769441999999998
+                                ],
+                                [
+                                    -78.638363999999996,
+                                    35.775551999999998
+                                ],
+                                [
+                                    -78.636734000000004,
+                                    35.775503
+                                ],
+                                [
+                                    -78.636909000000003,
+                                    35.763447999999997
+                                ],
+                                [
+                                    -78.639605000000003,
+                                    35.725078000000003
+                                ],
+                                [
+                                    -78.635859999999994,
+                                    35.693024999999999
+                                ],
+                                [
+                                    -78.645538000000002,
+                                    35.688243999999997
+                                ],
+                                [
+                                    -78.637313000000006,
+                                    35.675313000000003
+                                ],
+                                [
+                                    -78.637555000000006,
+                                    35.67465
+                                ],
+                                [
+                                    -78.638914,
+                                    35.674653999999997
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "College",
+                            "frequency": 2
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    -78.638914,
+                                    35.674653999999997
+                                ],
+                                [
+                                    -78.637555000000006,
+                                    35.67465
+                                ],
+                                [
+                                    -78.637313000000006,
+                                    35.675313000000003
+                                ],
+                                [
+                                    -78.645538000000002,
+                                    35.688243999999997
+                                ],
+                                [
+                                    -78.651448000000002,
+                                    35.688234999999999
+                                ],
+                                [
+                                    -78.656002999999998,
+                                    35.704053999999999
+                                ],
+                                [
+                                    -78.662937999999997,
+                                    35.704815000000004
+                                ],
+                                [
+                                    -78.706028000000003,
+                                    35.654038
+                                ],
+                                [
+                                    -78.703709000000003,
+                                    35.653325000000002
+                                ],
+                                [
+                                    -78.703764000000007,
+                                    35.652650999999999
+                                ],
+                                [
+                                    -78.707061999999993,
+                                    35.651040000000002
+                                ],
+                                [
+                                    -78.707230999999993,
+                                    35.651085000000002
+                                ],
+                                [
+                                    -78.753568999999999,
+                                    35.600811999999998
+                                ],
+                                [
+                                    -78.755431999999999,
+                                    35.601064000000001
+                                ],
+                                [
+                                    -78.756445999999997,
+                                    35.616779000000001
+                                ],
+                                [
+                                    -78.757474000000002,
+                                    35.619244999999999
+                                ],
+                                [
+                                    -78.758452000000005,
+                                    35.619360999999998
+                                ],
+                                [
+                                    -78.757474000000002,
+                                    35.619244999999999
+                                ],
+                                [
+                                    -78.756445999999997,
+                                    35.616779000000001
+                                ],
+                                [
+                                    -78.755431999999999,
+                                    35.601064000000001
+                                ],
+                                [
+                                    -78.753440999999995,
+                                    35.600709000000002
+                                ],
+                                [
+                                    -78.662887999999995,
+                                    35.704670999999998
+                                ],
+                                [
+                                    -78.656002999999998,
+                                    35.704053999999999
+                                ],
+                                [
+                                    -78.651448000000002,
+                                    35.688234999999999
+                                ],
+                                [
+                                    -78.645538000000002,
+                                    35.688243999999997
+                                ],
+                                [
+                                    -78.637313000000006,
+                                    35.675313000000003
+                                ],
+                                [
+                                    -78.637555000000006,
+                                    35.67465
+                                ],
+                                [
+                                    -78.638914,
+                                    35.674653999999997
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            var myStyle = {
+                "color": "#ff7800",
+                "weight": 5,
+                "opacity": 0.65
+            };
+
+            // BIG gotya:  coordinates are expected as [longitude, latitude] per spec: http://geojson.org/geojson-spec.html#positions
+            // and see http://gis.stackexchange.com/questions/54065/leaflet-geojson-coordinate-problem
+            L.geoJson(routeFeatures, {
+                style: myStyle,
+                onEachFeature: function onEachFeature(feature, layer) {
+                    // does this feature have a property named address?
+                    var popupContent = "";
+                    if (feature.properties && feature.properties.name) {
+                        popupContent += ("<strong>" + feature.properties.name + "</strong><br>");
+                    }
+                    if (feature.properties && feature.properties.frequency) {
+                        popupContent += ("Frequency: " + feature.properties.frequency + " / week<br>");
+                    }
+                    layer.bindPopup(popupContent);
+                }
+            }).addTo(map);
+        </script>
         <footer>
             <hr>
-            <a href="https://github.com/jewzaam/needless-compass-prototype-prototype">Source Code</a> | 
+            <a href="https://github.com/jewzaam/needless-compass-prototype">Source Code</a> | 
             <a href="http://www.gnu.org/licenses/gpl.txt">GPLv3 license</a> | 
             <a href="http://opendatacommons.org/lice nses/odbl/">Data License: ODbL</a> |
             <a href="http://project-osrm.org/">Routes: OSRM</a>
         </footer>
+        <script>initmap();</script>
     </body>
 </html>
