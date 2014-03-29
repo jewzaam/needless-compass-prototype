@@ -1,0 +1,68 @@
+<!--
+  Copyright (C) 2014 Naveen Malik
+ 
+  Needless Compass Prototype is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  Needless Compass Prototype is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with Needless Compass Prototype.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Needless Compass Prototype</title>
+        <!-- icon source: http://4vector.com/free-vector/compass-rose-98397 -->
+        <link rel="shortcut icon" href="images/compass_rose.ico"/>
+        <link rel="stylesheet" href="css/styles.css"/>
+    </head>
+    <body>
+        Needless Compass Prototype: House<br>
+        <form name="theForm">
+            <fieldset>
+                <table>
+                    <tr>
+                        <td>
+                            <label for="name" id="name_label"><strong>Name</strong></label>
+                        </td>
+                        <td>
+                            <input name="name" id="name" type="text" size="100" required placeholder="The name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="streetAddress" id="streetAddress_label">Street Address</label>
+                        </td>
+                        <td>
+                            <input name="streetAddress" id="streetAddress" type="text" size="100" required placeholder="The address"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="location" id="location_label">Location</label>
+                        </td>
+                        <td>
+                            <a href="get_current_location"><img src="images/compass_rose.ico" width="32" height="32" align="middle"/></a>
+                            <input name="location" id="location" type="text" size="95" required placeholder="The latitude and longitude"/>
+                        </td>
+                    </tr>
+                </table>
+                <input type="submit" id="addHouse" value="Add!"/>
+                <span id="result"></span>
+            </fieldset>
+        </form>
+        <footer>
+            <hr>
+            <a href="https://github.com/jewzaam/needless-compass-prototype-prototype">Source Code</a> | 
+            <a href="http://www.gnu.org/licenses/gpl.txt">GPLv3 license</a> | 
+            <a href="http://opendatacommons.org/lice nses/odbl/">Data License: ODbL</a> |
+            <a href="http://project-osrm.org/">Routes: OSRM</a>
+        </footer>
+    </body>
+</html>
