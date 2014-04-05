@@ -1,0 +1,394 @@
+<!--
+  Copyright (C) 2014 Naveen Malik
+ 
+  Needless Compass Prototype is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  Needless Compass Prototype is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with Needless Compass Prototype.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Needless Compass Prototype: leaflet</title>
+        <!-- icon source: http://4vector.com/free-vector/compass-rose-98397 -->
+        <link rel="shortcut icon" href="images/compass_rose.ico"/>
+        <link rel="stylesheet" href="css/styles.css"/>
+        <link rel="stylesheet" href="style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+        <link rel="stylesheet" href="style.css" type="text/css">
+
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    </head>
+    <body>
+        <div id="map" class="map" style="padding: 0; margin: 0; height: 100%"></div>
+        <script type="text/javascript">
+            // set up the map
+            var map = new L.Map('map');
+            // create the tile layer with correct attribution
+            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+            var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
+            map.addLayer(osm);
+
+            // breaking out point and line features separately to reduce variables while figuring this stuff out
+            var poiFeatures = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "Red Hat Tower",
+                            "categories": ["work"],
+                            "address": "100 East Davie Street, Raleigh, NC 27601, USA"
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                -78.63799139999999,
+                                35.775469899999997
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "North of Lake Benson",
+                            "categories": ["house"],
+                            "score": "95 %",
+                            "address": "2015 Gottwald Court, Garner, NC 27529, USA",
+                            "view": 11
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                -78.638768999999996,
+                                35.674258000000002
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "Johnson Pond",
+                            "categories": ["daycare"],
+                            "address": "6523 Johnson Pond Road, Fuquay Varina, NC 27526, USA"
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                -78.756513999999996,
+                                35.606282
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "Wake Tech",
+                            "categories": ["college"],
+                            "address": "9101 Fayetteville Road, Raleigh, NC 27603, USA"
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                -78.70477799999999,
+                                35.651594899999999
+                            ]
+                        }
+                    }
+                ]
+            };
+
+
+            var houseIcon = L.icon({
+                iconUrl: 'images/color_icons_green_home.png',
+                iconSize: [26, 45],
+                iconAnchor: [13, 45],
+                popupAnchor: [0, -30]
+            });
+
+            L.geoJson(poiFeatures, {
+                pointToLayer: function(feature, latlng) {
+                    if (feature.properties && feature.properties.view) {
+                        map.setView(latlng, feature.properties.view);
+                    }
+                    if (feature.properties && feature.properties.categories && feature.properties.categories.indexOf("house") >= 0) {
+                        // return with house icon if has house category
+                        return L.marker(latlng, {icon: houseIcon});
+                    } else {
+                        return L.marker(latlng);
+                    }
+                },
+                onEachFeature: function onEachFeature(feature, layer) {
+                    // does this feature have a property named address?
+                    var popupContent = "";
+                    if (feature.properties && feature.properties.name) {
+                        popupContent += ("<strong>" + feature.properties.name + "</strong><br>");
+                    }
+                    if (feature.properties && feature.properties.score) {
+                        popupContent += ("Score: " + feature.properties.score + "<br>");
+                    }
+                    if (feature.properties && feature.properties.address) {
+                        popupContent += feature.properties.address;
+                    }
+                    layer.bindPopup(popupContent);
+                }
+            }).addTo(map);
+
+
+            var routeFeatures = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "Work Normal",
+                            "frequency": 5
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    -78.638914,
+                                    35.674653999999997
+                                ],
+                                [
+                                    -78.637555000000006,
+                                    35.67465
+                                ],
+                                [
+                                    -78.637313000000006,
+                                    35.675313000000003
+                                ],
+                                [
+                                    -78.645538000000002,
+                                    35.688243999999997
+                                ],
+                                [
+                                    -78.635733999999999,
+                                    35.693086999999998
+                                ],
+                                [
+                                    -78.639379000000005,
+                                    35.725127000000001
+                                ],
+                                [
+                                    -78.635700999999997,
+                                    35.763424999999998
+                                ],
+                                [
+                                    -78.635401000000002,
+                                    35.769384000000002
+                                ],
+                                [
+                                    -78.638733000000002,
+                                    35.769441999999998
+                                ],
+                                [
+                                    -78.638363999999996,
+                                    35.775551999999998
+                                ],
+                                [
+                                    -78.636734000000004,
+                                    35.775503
+                                ],
+                                [
+                                    -78.636909000000003,
+                                    35.763447999999997
+                                ],
+                                [
+                                    -78.639605000000003,
+                                    35.725078000000003
+                                ],
+                                [
+                                    -78.635859999999994,
+                                    35.693024999999999
+                                ],
+                                [
+                                    -78.645538000000002,
+                                    35.688243999999997
+                                ],
+                                [
+                                    -78.637313000000006,
+                                    35.675313000000003
+                                ],
+                                [
+                                    -78.637555000000006,
+                                    35.67465
+                                ],
+                                [
+                                    -78.638914,
+                                    35.674653999999997
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "College",
+                            "frequency": 2
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    -78.638914,
+                                    35.674653999999997
+                                ],
+                                [
+                                    -78.637555000000006,
+                                    35.67465
+                                ],
+                                [
+                                    -78.637313000000006,
+                                    35.675313000000003
+                                ],
+                                [
+                                    -78.645538000000002,
+                                    35.688243999999997
+                                ],
+                                [
+                                    -78.651448000000002,
+                                    35.688234999999999
+                                ],
+                                [
+                                    -78.656002999999998,
+                                    35.704053999999999
+                                ],
+                                [
+                                    -78.662937999999997,
+                                    35.704815000000004
+                                ],
+                                [
+                                    -78.706028000000003,
+                                    35.654038
+                                ],
+                                [
+                                    -78.703709000000003,
+                                    35.653325000000002
+                                ],
+                                [
+                                    -78.703764000000007,
+                                    35.652650999999999
+                                ],
+                                [
+                                    -78.707061999999993,
+                                    35.651040000000002
+                                ],
+                                [
+                                    -78.707230999999993,
+                                    35.651085000000002
+                                ],
+                                [
+                                    -78.753568999999999,
+                                    35.600811999999998
+                                ],
+                                [
+                                    -78.755431999999999,
+                                    35.601064000000001
+                                ],
+                                [
+                                    -78.756445999999997,
+                                    35.616779000000001
+                                ],
+                                [
+                                    -78.757474000000002,
+                                    35.619244999999999
+                                ],
+                                [
+                                    -78.758452000000005,
+                                    35.619360999999998
+                                ],
+                                [
+                                    -78.757474000000002,
+                                    35.619244999999999
+                                ],
+                                [
+                                    -78.756445999999997,
+                                    35.616779000000001
+                                ],
+                                [
+                                    -78.755431999999999,
+                                    35.601064000000001
+                                ],
+                                [
+                                    -78.753440999999995,
+                                    35.600709000000002
+                                ],
+                                [
+                                    -78.662887999999995,
+                                    35.704670999999998
+                                ],
+                                [
+                                    -78.656002999999998,
+                                    35.704053999999999
+                                ],
+                                [
+                                    -78.651448000000002,
+                                    35.688234999999999
+                                ],
+                                [
+                                    -78.645538000000002,
+                                    35.688243999999997
+                                ],
+                                [
+                                    -78.637313000000006,
+                                    35.675313000000003
+                                ],
+                                [
+                                    -78.637555000000006,
+                                    35.67465
+                                ],
+                                [
+                                    -78.638914,
+                                    35.674653999999997
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            var myStyle = {
+                "color": "#ff7800",
+                "weight": 5,
+                "opacity": 0.65
+            };
+
+            // BIG gotya:  coordinates are expected as [longitude, latitude] per spec: http://geojson.org/geojson-spec.html#positions
+            // and see http://gis.stackexchange.com/questions/54065/leaflet-geojson-coordinate-problem
+            L.geoJson(routeFeatures, {
+                style: myStyle,
+                onEachFeature: function onEachFeature(feature, layer) {
+                    // does this feature have a property named address?
+                    var popupContent = "";
+                    if (feature.properties && feature.properties.name) {
+                        popupContent += ("<strong>" + feature.properties.name + "</strong><br>");
+                    }
+                    if (feature.properties && feature.properties.frequency) {
+                        popupContent += ("Frequency: " + feature.properties.frequency + " / week<br>");
+                    }
+                    layer.bindPopup(popupContent);
+                }
+            }).addTo(map);
+        </script>
+        <footer>
+            <hr>
+            <a href="https://github.com/jewzaam/needless-compass-prototype">Source Code</a> | 
+            <a href="http://www.gnu.org/licenses/gpl.txt">GPLv3 license</a> | 
+            <a href="http://opendatacommons.org/lice nses/odbl/">Data License: ODbL</a> |
+            <a href="http://project-osrm.org/">Routes: OSRM</a>
+        </footer>
+        <script>initmap();</script>
+    </body>
+</html>
