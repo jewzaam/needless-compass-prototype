@@ -21,15 +21,42 @@
         <!-- icon source: http://4vector.com/free-vector/compass-rose-98397 -->
         <link rel="shortcut icon" href="images/compass_rose.ico"/>
         <link rel="stylesheet" href="css/styles.css"/>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#addCategory').click(function(event) {
+                    event.preventDefault();
+
+                    var result = $('#categories');
+
+                    result.html("<hr/><table padding=1 border=1><tr><th>Categories</th></tr><tr><td>" + $.trim($('#category').val()) + "</td></tr></table>");
+                });
+                $('#saveTrip').click(function(event) {
+                    event.preventDefault();
+
+                    var result = $('#trips');
+
+                    result.html("<hr/><table padding=1 border=1><tr><th>Trip</th><th>Frequency</th><th>Categories</th></tr><tr><td>"
+                            + $.trim($('#name').val()) + "</td><td>"
+                            + $.trim($('#frequency').val()) + "</td><td>"
+                            + $.trim($('#category').val()) + "</td></tr></table>");
+                });
+                $('#doneTrip').click(function(event) {
+                    window.location.href = "add-poi.html";
+                });
+            }); // (document).ready
+        </script>
     </head>
     <body>
-        Needless Compass Prototype: House<br>
+        Add Trip<br>
         <form name="theForm">
             <fieldset>
+                <input type="submit" id="saveTrip" value="Save"/>
+                <input type="button" id="doneTrip" value="Done"/>
                 <table>
                     <tr>
                         <td>
-                            <label for="name" id="name_label"><strong>Name</strong></label>
+                            <label for="name" id="name_label">Name</label>
                         </td>
                         <td>
                             <input name="name" id="name" type="text" size="100" required placeholder="The name"/>
@@ -37,24 +64,24 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="streetAddress" id="streetAddress_label">Street Address</label>
+                            <label for="frequency" id="frequency_label">Frequency</label>
                         </td>
                         <td>
-                            <input name="streetAddress" id="streetAddress" type="text" size="100" required placeholder="The address"/>
+                            <input name="frequency" id="frequency" type="text" size="100" required placeholder="Frequency (times / week)"/>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label for="location" id="location_label">Location</label>
+                            <label for="category" id="category_label">Category</label>
                         </td>
                         <td>
-                            <a href="get_current_location"><img src="images/compass_rose.ico" width="32" height="32" align="middle"/></a>
-                            <input name="location" id="location" type="text" size="95" required placeholder="The latitude and longitude"/>
+                            <input name="category" id="category" type="text" size="80"  placeholder="A category"/>
+                            <input type="submit" id="addCategory" value="Add"/>
                         </td>
                     </tr>
                 </table>
-                <input type="submit" id="addHouse" value="Add!"/>
-                <span id="result"></span>
+                <span id="categories"></span>
+                <span id="trips"></span>
             </fieldset>
         </form>
         <footer>

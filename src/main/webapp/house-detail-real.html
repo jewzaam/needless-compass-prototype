@@ -24,7 +24,6 @@
         <link rel="stylesheet" href="style.css" type="text/css"/>
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
         <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
-
     </head>
     <body>
         Needless Compass [Prototype]<br/>
@@ -124,21 +123,37 @@
             map.addLayer(osm);
 
             // breaking out point and line features separately to reduce variables while figuring this stuff out
-            var houseIcon = L.icon({
-                iconUrl: 'images/color_icons_green_home.png',
-                iconSize: [26, 45],
-                iconAnchor: [13, 45],
+
+            var iconHouseGreen = L.icon({
+                iconUrl: 'images/marker_house_green.png',
+                iconSize: [29, 45],
+                iconAnchor: [14, 45],
                 popupAnchor: [0, -30]
             });
-
+            var iconHouseYellow = L.icon({
+                iconUrl: 'images/marker_house_yellow.png',
+                iconSize: [29, 45],
+                iconAnchor: [14, 45],
+                popupAnchor: [0, -30]
+            });
+            var iconHouseRed = L.icon({
+                iconUrl: 'images/marker_house_red.png',
+                iconSize: [29, 45],
+                iconAnchor: [14, 45],
+                popupAnchor: [0, -30]
+            });
+            var iconHousePurple = L.icon({
+                iconUrl: 'images/marker_house_purple.png',
+                iconSize: [29, 45],
+                iconAnchor: [14, 45],
+                popupAnchor: [0, -30]
+            });
 
             var myStyle = {
                 "color": "#ff7800",
                 "weight": 5,
                 "opacity": 0.65
             };
-
-
 
             var routeFeatures = {
                 "type": "FeatureCollection",
@@ -378,7 +393,15 @@
                     }
                     if (feature.properties && feature.properties.categories && feature.properties.categories.indexOf("house") >= 0) {
                         // return with house icon if has house category
-                        return L.marker(latlng, {icon: houseIcon});
+                        if (feature.properties.scores.ROUTE.percentage < 33.0) {
+                            return L.marker(latlng, {icon: iconHouseRed});
+                        } else if (feature.properties.scores.ROUTE.percentage < 66.0) {
+                            return L.marker(latlng, {icon: iconHouseYellow});
+                        } else if (feature.properties.scores.ROUTE.percentage >= 66.0) {
+                            return L.marker(latlng, {icon: iconHouseGreen});
+                        } else {
+                            return L.marker(latlng, {icon: iconHousePurple});
+                        }
                     } else {
                         return L.marker(latlng);
                     }
@@ -395,12 +418,12 @@
                     if (feature.properties && feature.properties.address) {
                         popupContent += feature.properties.address;
                     }
+                    popupContent += "<BR><a href='https://github.com/jewzaam/needless-compass-prototype'>prototype</a>";
                     layer.bindPopup(popupContent);
                 }
-            }).on('click', function(e) {
-                alert('ON: ' + e.latlng);
-                X.addTo(map);
             }).addTo(map);
+
+            L.control.scale().addTo(map);
         </script>
         <footer>
             <hr>

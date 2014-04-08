@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Tutorial</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#next').click(function(event) {
+                    event.preventDefault();
+
+                    var result = $('#categories');
+
+                    result.html("<hr/><table padding=1 border=1><tr><th>Categories</th></tr><tr><td>" + $.trim($('#category').val()) + "</td></tr></table>");
+                });
+                $('#saveTrip').click(function(event) {
+                    event.preventDefault();
+
+                    var result = $('#trips');
+
+                    result.html("<hr/><table padding=1 border=1><tr><th>Trip</th><th>Categories</th></tr><tr><td>"
+                            + $.trim($('#name').val()) + "</td><td>"
+                            + $.trim($('#category').val()) + "</td></tr></table>");
+                });
+            }); // (document).ready
+        </script>
+    </head>
+    <body>
+        <h1>Welcome to Needless Compass!</h1>
+        <p>This tutorial will help you get started by guiding you in adding the first bits of data you need to use 
+            the tool.  [Add text about what this tool is all about]  There are three main bits of data to collect:</p>
+        <ul>
+            <li>Houses - where you live or places you're considering</li>
+            <li>Trips - routine places you go in your day-to-day activities, such as school and/or work, captured as simple categorizations</li>
+            <li>Points of Interest - specific places you visit (or would visit) that are assigned categories used in your trips</li>
+        </ul>
+
+        <p>Click "Next" to start adding some data!</p>
+        <form action="add-house.html" method="get">
+            <input type="submit" value="Next"/>
+        </form>
+    </body>
+</html>

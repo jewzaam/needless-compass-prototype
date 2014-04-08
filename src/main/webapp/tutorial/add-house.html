@@ -1,0 +1,87 @@
+<!--
+  Copyright (C) 2014 Naveen Malik
+ 
+  Needless Compass Prototype is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  Needless Compass Prototype is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with Needless Compass Prototype.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Needless Compass Prototype</title>
+        <!-- icon source: http://4vector.com/free-vector/compass-rose-98397 -->
+        <link rel="shortcut icon" href="images/compass_rose.ico"/>
+        <link rel="stylesheet" href="css/styles.css"/>
+        <style>
+            /* or put this in your stylesheet */
+
+            .button {
+                display: inline-block;
+                padding: 3px 5px;
+                border: 1px solid #000;
+                background: #eee;
+            }
+
+        </style>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#addHouse').click(function(event) {
+                    event.preventDefault();
+
+                    var result = $('#result');
+
+                    result.html("<hr/><table padding=1 border=1><tr><th>House</th><th>Address</th></tr><tr><td>" + $.trim($('#name').val()) +
+                            "</td><td>" + $.trim($('#location').val()) + "</td></tr></table>");
+                });
+                $('#doneHouse').click(function(event) {
+                    window.location.href = "add-trip.html";
+                });
+            }); // (document).ready
+        </script>
+    </head>
+    <body>
+        Add House<br>
+        <form name="theForm">
+            <fieldset>
+                <input type="submit" id="addHouse" value="Add"/>
+                <input type="button" id="doneHouse" value="Done"/>
+                <table>
+                    <tr>
+                        <td>
+                            <label for="name" id="name_label">Name</label>
+                        </td>
+                        <td>
+                            <input name="name" id="name" type="text" size="100" required placeholder="The name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="location" id="location_label">Location</label>
+                        </td>
+                        <td>
+                            <input name="location" id="location" type="text" size="100" required placeholder="Latitude,Longitude OR Street Address"/>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </form>
+        <span id="result"></span>
+        <footer>
+            <hr>
+            <a href="https://github.com/jewzaam/needless-compass-prototype-prototype">Source Code</a> | 
+            <a href="http://www.gnu.org/licenses/gpl.txt">GPLv3 license</a> | 
+            <a href="http://opendatacommons.org/lice nses/odbl/">Data License: ODbL</a> |
+            <a href="http://project-osrm.org/">Routes: OSRM</a>
+        </footer>
+    </body>
+</html>
