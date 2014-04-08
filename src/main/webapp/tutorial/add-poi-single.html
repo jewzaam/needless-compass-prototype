@@ -24,18 +24,21 @@
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
+                // mock up some initial poi
+                $("#result").html("<hr/><table padding=1 border=1><tr><th>Point of Interest</th><th>Location</th><th>Options</th></tr>"
+                        + "<tr><td>Harris Teeter</td><td>Some Address</td><td><a href=''>Edit</a> | <a href=''>Delete</a></td></tr></table>");
+
                 $('#savePoi').click(function(event) {
                     event.preventDefault();
 
-                    var result = $('#poi');
-
-                    result.html("<hr/><table padding=1 border=1><tr><th>Point of Interest</th><th>Category</th><th>Location</th></tr><tr><td>"
+                    $("#result").html("<hr/><table padding=1 border=1><tr><th>Point of Interest</th><th>Location</th><th>Options</th></tr>"
+                            + "<tr><td>Harris Teeter</td><td>Some Address</td><td><a href=''>Edit</a> | <a href=''>Delete</a></td></tr>"
+                            + "<tr><td>"
                             + $.trim($('#name').val()) + "</td><td>"
-                            + $.trim($('#category').val()) + "</td><td>"
-                            + $.trim($('#location').val()) + "</td></tr></table>");
+                            + $.trim($('#location').val()) + "</td><td><a href=''>Edit</a> | <a href=''>Delete</a></td></tr></table>");
                 });
                 $('#donePoi').click(function(event) {
-                    window.location.href = "add-poi.html";
+                    window.location.href = "../house-detail-full.html";
                 });
             }); // (document).ready
         </script>
@@ -49,18 +52,23 @@
                 <table>
                     <tr>
                         <td>
+                            <label for="category" id="category_label">Category</label>
+                        </td>
+                        <td>
+                            <select name="category" id="category" size="1">
+                                <option>grocery</option>
+                                <option>work</option>
+                                <option>school</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
                             <label for="name" id="name_label">Name</label>
                         </td>
                         <td>
                             <input name="name" id="name" type="text" size="100" required placeholder="The name"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="category" id="category_label">Category</label>
-                        </td>
-                        <td>
-                            <input name="category" id="category" type="text" size="100" placeholder="The category"/>
                         </td>
                     </tr>
                     <tr>
@@ -72,7 +80,7 @@
                         </td>
                     </tr>
                 </table>
-                <span id="poi"></span>
+                <span id="result"></span>
             </fieldset>
         </form>
         <footer>

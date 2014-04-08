@@ -21,27 +21,22 @@
         <!-- icon source: http://4vector.com/free-vector/compass-rose-98397 -->
         <link rel="shortcut icon" href="images/compass_rose.ico"/>
         <link rel="stylesheet" href="css/styles.css"/>
-        <style>
-            /* or put this in your stylesheet */
-
-            .button {
-                display: inline-block;
-                padding: 3px 5px;
-                border: 1px solid #000;
-                background: #eee;
-            }
-
-        </style>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
+                // mock up some initial houses
+                $("#result").html("<hr/><table padding=1 border=1><tr><th>House</th><th>Address</th><th>Options</th></tr>"
+                        + "<tr><td>Current House</td><td>80 Sophia Ln</td><td><a href=''>Edit</a> | <a href=''>Delete</a></td></tr></table>");
+
                 $('#addHouse').click(function(event) {
                     event.preventDefault();
 
-                    var result = $('#result');
-
-                    result.html("<hr/><table padding=1 border=1><tr><th>House</th><th>Address</th></tr><tr><td>" + $.trim($('#name').val()) +
-                            "</td><td>" + $.trim($('#location').val()) + "</td></tr></table>");
+                    $("#result").html("<hr/><table padding=1 border=1><tr><th>House</th><th>Address</th><th>Options</th></tr>"
+                            + "<tr><td>Current House</td><td>80 Sophia Ln</td><td><a href=''>Edit</a> | <a href=''>Delete</a></td></tr>"
+                            + "<tr><td>"
+                            + $.trim($('#name').val()) + "</td><td>"
+                            + $.trim($('#location').val()) + "</td><td><a href=''>Edit</a> | <a href=''>Delete</a></td></tr>"
+                            + "</table>");
                 });
                 $('#doneHouse').click(function(event) {
                     window.location.href = "add-trip.html";

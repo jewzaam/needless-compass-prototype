@@ -29,17 +29,17 @@
 
                     var result = $('#categories');
 
-                    result.html("<hr/><table padding=1 border=1><tr><th>Categories</th></tr><tr><td>" + $.trim($('#category').val()) + "</td></tr></table>");
+                    result.html("<hr/><table padding=1 border=1><tr><th>Categories</th></tr><tr><td>" + $.trim($('#category').val()) + "</td><td><a href='?DELETE'>X</a></tr></table>");
                 });
                 $('#saveTrip').click(function(event) {
                     event.preventDefault();
 
                     var result = $('#trips');
 
-                    result.html("<hr/><table padding=1 border=1><tr><th>Trip</th><th>Frequency</th><th>Categories</th></tr><tr><td>"
+                    result.html("<hr/><table padding=1 border=1><tr><th>Trip</th><th>Frequency</th><th>Categories</th><th>Options</th></tr><tr><td>"
                             + $.trim($('#name').val()) + "</td><td>"
                             + $.trim($('#frequency').val()) + "</td><td>"
-                            + $.trim($('#category').val()) + "</td></tr></table>");
+                            + $.trim($('#category').val()) + "</td><td><a href=''>Edit</a> | <a href=''>Delete</a></td></tr></table>");
                 });
                 $('#doneTrip').click(function(event) {
                     window.location.href = "add-poi.html";
