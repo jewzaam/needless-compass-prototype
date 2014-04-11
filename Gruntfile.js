@@ -17,6 +17,8 @@ module.exports = function(grunt) {
             }
         },
 
+        // Normalize might not be necessary with bootstrap added.
+        // In any case, need a way to have normalize be first in css.  cssmin doesn't seem to support this.
         cssmin: {
             combine: {
                 files: {
