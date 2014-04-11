@@ -1,0 +1,7 @@
+{
+  "name": "needless-compass-prototype",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "assemble": "^0.4.37"
+  }
+}
