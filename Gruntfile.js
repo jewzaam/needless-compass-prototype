@@ -3,6 +3,7 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         clean: ['dist'],
+
         assemble: {
             options: {
                 partials: 'src/main/webapp/templates/*.hbs',
@@ -14,11 +15,20 @@ module.exports = function(grunt) {
                 src: ['src/main/webapp/templates/layouts/*hbs'],
                 dest: 'dist'
             }
+        },
+
+        cssmin: {
+            combine: {
+                files: {
+                    'dist/all.css': ['src/main/webapp/**/*.css']
+                }
+            }
         }
     });
 
 
     grunt.loadNpmTasks('assemble');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-    grunt.registerTask('default', ['assemble']);
+    grunt.registerTask('default', ['assemble', 'cssmin']);
 };

@@ -2,6 +2,7 @@
   "name": "needless-compass-prototype",
   "devDependencies": {
     "grunt": "^0.4.4",
-    "assemble": "^0.4.37"
+    "assemble": "^0.4.37",
+    "grunt-contrib-cssmin": "^0.9.0"
   }
 }
