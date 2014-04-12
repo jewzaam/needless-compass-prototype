@@ -17,13 +17,26 @@ module.exports = function(grunt) {
             }
         },
 
-        // Normalize might not be necessary with bootstrap added.
-        // In any case, need a way to have normalize be first in css.  cssmin doesn't seem to support this.
-        cssmin: {
-            combine: {
+        // Normalize might not be necessary with bootstrap.
+        sass: {
+            dist: {
+                options: {
+                    includePaths: ['src/main/webapp/sass/module/'],
+                    outputStyle: 'nested'
+                },
                 files: {
-                    'dist/all.css': ['src/main/webapp/**/*.css']
+                    'dist/main.css': 'src/main/webapp/sass/main.scss'
                 }
+            }
+        },
+
+        cssmin: {
+            minify: {
+                expand: true,
+                cwd: 'dist/',
+                src: ['*.css', '!*.min.css'],
+                dest: 'dist/',
+                ext: '.min.css'
             }
         },
 
@@ -40,13 +53,11 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     flatten: true,
-                    // cwd: 'src/main/webapp/images/',
                     src: ['src/main/webapp/images/**/*.png'],
                     dest: 'dist/images'
                 }, {
                     expand: true,
                     flatten: true,
-                    // cwd: 'src/main/webapp/images/',
                     src: ['src/main/webapp/images/**/*.ico'],
                     dest: 'dist/'
                 }]
@@ -58,8 +69,8 @@ module.exports = function(grunt) {
                 livereload: true
             },
             css: {
-                files: 'src/main/webapp/css/**/*.css',
-                tasks: ['cssmin']
+                files: 'src/main/webapp/sass/**/*.scss',
+                tasks: ['sass', 'cssmin']
             },
             templates: {
                 files: 'src/main/webapp/templates/**/*.hbs',
@@ -73,6 +84,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-sass');
 
-    grunt.registerTask('default', ['assemble', 'cssmin', 'copy']);
+    grunt.registerTask('default', ['assemble', 'sass', 'cssmin', 'copy']);
 };
