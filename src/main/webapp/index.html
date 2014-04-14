@@ -1,16 +1,16 @@
 <!--
   Copyright (C) 2014 Naveen Malik
- 
+
   Needless Compass Prototype is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
- 
+
   Needless Compass Prototype is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with Needless Compass Prototype.  If not, see <http://www.gnu.org/licenses/>.
 -->
@@ -27,6 +27,7 @@
     </head>
     <body>
         <div id="map"></div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="data/poi.js" type="text/javascript"></script>
         <script src="data/route.js" type="text/javascript"></script>
         <script src="data/trip.js" type="text/javascript"></script>
@@ -124,15 +125,22 @@
                 var radius = parseInt(e.accuracy / 2, 10);
 
                 var popupText = "You are here! (+/- " + radius + " meters)";
-                popupText += '<br>Quick Add House<br><form>';
+                popupText += '<br>Quick Add House<br>';
                 popupText += '<input name="name" id="name" type="text" size="15" required placeholder="The name"/>';
-                popupText += '<input type="submit" id="addHouse" value="Add"/>';
-                popupText += '</form>';
+                popupText += '<input type="submit" id="addHouse" data-house-id="house-id-goes-here" value="Add" onClick="doSomething(event)" />';
+                popupText += '';
 
                 layerGroupHere.addLayer(L.marker(e.latlng, {icon: iconPersonPurple})
                         .bindPopup(popupText).openPopup());
 
                 layerGroupHere.addLayer(L.circle(e.latlng, radius));
+            }
+
+
+            function doSomething(e){
+                var name = $('#name').val();
+                var id = $(e.target).data('house-id');
+                console.log("called fn doSometing()", name, id, e.target);
             }
 
             map.on('locationfound', onLocationFound);
